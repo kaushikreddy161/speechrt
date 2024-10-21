@@ -143,7 +143,7 @@ def test_endpoint():
     logger.info("Test endpoint accessed")
     return jsonify({"message": "Test endpoint working", "speech_key": speech_key[:5] + "..."})
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8000))
-    logger.info(f"Starting application on port {port}")
-    app.run(host='0.0.0.0', port=port, debug=True)
+#if __name__ == '__main__':
+ #   port = int(os.environ.get('PORT', 8000))
+  #  logger.info(f"Starting application on port {port}")
+   # app.run(host='0.0.0.0', port=port, debug=True)
