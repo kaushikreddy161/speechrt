@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
 
 # Azure credentials
 speech_key = os.environ.get('AZURE_SPEECH_KEY','d7f1bae7919b41479575a01b73316bb6')
