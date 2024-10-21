@@ -8,19 +8,39 @@ from flask_cors import CORS
 
 load_dotenv()
 app = Flask(__name__)
-# Adjust the CORS settings to allow requests from your frontend
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins for testing
 
+# Enable CORS for the frontend origin and allow GET, POST, and OPTIONS methods
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}}, methods=["GET", "POST", "OPTIONS"])
 
 # Azure credentials
-speech_key = os.environ.get('AZURE_SPEECH_KEY','d7f1bae7919b41479575a01b73316bb6')
-service_region = os.environ.get('AZURE_SPEECH_REGION','australiaeast')
-endpoint = os.environ.get('AZURE_SPEECH_ENDPOINT','https://australiaeast.api.cognitive.microsoft.com/')
+speech_key = os.environ.get('AZURE_SPEECH_KEY', 'd7f1bae7919b41479575a01b73316bb6')
+service_region = os.environ.get('AZURE_SPEECH_REGION', 'australiaeast')
+endpoint = os.environ.get('AZURE_SPEECH_ENDPOINT', 'https://australiaeast.api.cognitive.microsoft.com/')
 
 translation_history = []
 current_partial_text = ""
 is_recording = False
 result_queue = queue.Queue()
+
+@app.before_request
+def handle_preflight():
+    """
+    Handle OPTIONS preflight request to ensure proper CORS headers are set.
+    """
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        headers = response.headers
+
+        # Allow the specific origin
+        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5500'
+
+        # Specify the allowed methods (GET, POST, OPTIONS)
+        headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+
+        # Specify the allowed headers (Content-Type, Authorization, etc.)
+        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+
+        return response
 
 @app.route('/')
 def welcome():
@@ -118,5 +138,6 @@ def start_translation(source_lang, target_lang):
 
     translator.stop_continuous_recognition()
 
-#if __name__ == '__main__':
-#    app.run(host='0.0.0.0', port=8000, debug=True)
+# Uncomment if running locally
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=8000, debug=True)
