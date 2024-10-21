@@ -22,25 +22,7 @@ current_partial_text = ""
 is_recording = False
 result_queue = queue.Queue()
 
-@app.before_request
-def handle_preflight():
-    """
-    Handle OPTIONS preflight request to ensure proper CORS headers are set.
-    """
-    if request.method == 'OPTIONS':
-        response = app.make_default_options_response()
-        headers = response.headers
 
-        # Allow the specific origin
-        headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5500'
-
-        # Specify the allowed methods (GET, POST, OPTIONS)
-        headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-
-        # Specify the allowed headers (Content-Type, Authorization, etc.)
-        headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-
-        return response
 
 @app.route('/')
 def welcome():
