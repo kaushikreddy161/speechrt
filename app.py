@@ -22,8 +22,6 @@ current_partial_text = ""
 is_recording = False
 result_queue = queue.Queue()
 
-
-
 @app.route('/')
 def welcome():
     return jsonify({
@@ -81,45 +79,50 @@ def clear_history():
 def start_translation(source_lang, target_lang):
     global current_partial_text, is_recording
 
-    audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
-    translation_config = speechsdk.translation.SpeechTranslationConfig(
-        subscription=speech_key,
-        region=service_region
-    )
-    translation_config.speech_recognition_language = source_lang
-    translation_config.add_target_language(target_lang)
+    try:
+        audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
+        translation_config = speechsdk.translation.SpeechTranslationConfig(
+            subscription=speech_key,
+            region=service_region
+        )
+        translation_config.speech_recognition_language = source_lang
+        translation_config.add_target_language(target_lang)
 
-    translator = speechsdk.translation.TranslationRecognizer(
-        translation_config=translation_config,
-        audio_config=audio_config
-    )
+        translator = speechsdk.translation.TranslationRecognizer(
+            translation_config=translation_config,
+            audio_config=audio_config
+        )
 
-    def handle_result(event):
-        global current_partial_text
-        if event.result.reason == speechsdk.ResultReason.TranslatedSpeech:
-            translations = event.result.translations
-            translated_text = translations.get(target_lang, "Translation not available")
-            if translated_text.strip():
-                result_queue.put(translated_text)
+        def handle_result(event):
+            global current_partial_text
+            if event.result.reason == speechsdk.ResultReason.TranslatedSpeech:
+                translations = event.result.translations
+                translated_text = translations.get(target_lang, "Translation not available")
+                if translated_text.strip():
+                    result_queue.put(translated_text)
 
-    def handle_intermediate_result(event):
-        global current_partial_text
-        if event.result.reason == speechsdk.ResultReason.TranslatingSpeech:
-            translations = event.result.translations
-            translated_text = translations.get(target_lang, "")
-            if translated_text.strip():
-                current_partial_text = translated_text
+        def handle_intermediate_result(event):
+            global current_partial_text
+            if event.result.reason == speechsdk.ResultReason.TranslatingSpeech:
+                translations = event.result.translations
+                translated_text = translations.get(target_lang, "")
+                if translated_text.strip():
+                    current_partial_text = translated_text
 
-    translator.recognized.connect(handle_result)
-    translator.recognizing.connect(handle_intermediate_result)
+        translator.recognized.connect(handle_result)
+        translator.recognizing.connect(handle_intermediate_result)
 
-    translator.start_continuous_recognition()
+        # Start recognition
+        translator.start_continuous_recognition()
 
-    while is_recording:
-        pass
+        while is_recording:
+            pass
 
-    translator.stop_continuous_recognition()
+        translator.stop_continuous_recognition()
+
+    except Exception as e:
+        print(f"Error in start_translation: {e}")
 
 # Uncomment if running locally
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=8000, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
