@@ -13,9 +13,9 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 # Azure credentials
-speech_key = os.environ.get('AZURE_SPEECH_KEY')
-service_region = os.environ.get('AZURE_SPEECH_REGION')
-endpoint = os.environ.get('AZURE_SPEECH_ENDPOINT')
+speech_key = os.environ.get('AZURE_SPEECH_KEY','d7f1bae7919b41479575a01b73316bb6')
+service_region = os.environ.get('AZURE_SPEECH_REGION','australiaeast')
+endpoint = os.environ.get('AZURE_SPEECH_ENDPOINT','https://australiaeast.api.cognitive.microsoft.com/')
 
 translation_history = []
 current_partial_text = ""
