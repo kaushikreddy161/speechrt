@@ -16,67 +16,6 @@ CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 speech_key = os.environ.get('AZURE_SPEECH_KEY')
 service_region = os.environ.get('AZURE_SPEECH_REGION')
 endpoint = os.environ.get('AZURE_SPEECH_ENDPOINT')
-target_languages = {
-    'Arabic': 'ar',
-    'Bengali': 'bn',
-    'Chinese (Simplified)': 'zh-Hans',
-    'Chinese (Traditional)': 'zh-Hant',
-    'English': 'en',
-    'French': 'fr',
-    'German': 'de',
-    'Gujarati': 'gu',
-    'Hindi': 'hi',
-    'Italian': 'it',
-    'Japanese': 'ja',
-    'Kannada': 'kn',
-    'Korean': 'ko',
-    'Malayalam': 'ml',
-    'Marathi': 'mr',
-    'Nepali': 'ne',
-    'Persian': 'fa',
-    'Portuguese': 'pt',
-    'Punjabi': 'pa',
-    'Russian': 'ru',
-    "Sinhala": "si",
-    'Spanish': 'es',
-    'Tamil': 'ta',
-    'Telugu': 'te',
-    'Thai': 'th',
-    'Turkish': 'tr',
-    'Urdu': 'ur',
-    'Vietnamese': 'vi'
-}
-
-speech_recognition_languages = {
-    'Arabic': 'ar-SA',
-    'Bengali': 'bn-IN',
-    'Chinese (Simplified)': 'zh-CN',
-    'Chinese (Traditional)': 'zh-TW',
-    'English': 'en-US',
-    'French': 'fr-FR',
-    'German': 'de-DE',
-    'Gujarati': 'gu-IN',
-    'Hindi': 'hi-IN',
-    'Italian': 'it-IT',
-    'Japanese': 'ja-JP',
-    'Kannada': 'kn-IN',
-    'Korean': 'ko-KR',
-    'Malayalam': 'ml-IN',
-    'Marathi': 'mr-IN',
-    'Sinhala': 'si-LK',
-    'Nepali': 'ne-NP',
-    'Persian': 'fa-IR',
-    'Portuguese': 'pt-BR',
-    'Punjabi': 'pa-IN',
-    'Russian': 'ru-RU',
-    'Spanish': 'es-ES',
-    'Tamil': 'ta-IN',
-    'Telugu': 'te-IN',
-    'Thai': 'th-TH',
-    'Turkish': 'tr-TR',
-    'Urdu': 'ur-PK',
-    'Vietnamese': 'vi-VN'
-}
 
 translation_history = []
 current_partial_text = ""
